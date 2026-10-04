@@ -2,7 +2,7 @@
 
 This file is the running record of the build. It is updated in the same commit as every feature, plan change, decision or environment variable change. If this file and the code ever disagree, tell Claude and it will be fixed.
 
-Last updated: 2026-10-04 (all pages built; Supabase and Vercel setup next)
+Last updated: 2026-10-04 (Supabase live; Vercel needs Jacob's clicks)
 
 ---
 
@@ -19,14 +19,16 @@ Legend: **Not started** / **In progress** / **Built** (code written, not yet che
 | 4 | Landing page `/` (spec 5) | Verified | Zero style/position differences above the plans section. |
 | 5 | Compare plans table (spec 7) | Verified | Checked at 1440 and 390; keyboard-scrollable; passes accessibility scan. |
 | 6 | `/join` page and form (spec 6) | Verified | Browser-tested: plan preselect, label updates, Not sure, email blur message, error style, keyboard-only, mobile bar. |
-| 7 | Sign-up API + database + confirmation email (spec 9, 8) | Built | Code and `supabase/schema.sql` done. Live save and email not yet tested (needs Supabase project + Resend key). |
+| 7 | Sign-up API + database + confirmation email (spec 9, 8) | In progress | Supabase project and table are LIVE and checked in the database. App-to-database save and email not yet tested (needs service key on Vercel + Resend key). |
 | 8 | `/reserve`, `/confirmed`, Stripe checkout + webhook (spec 8) | Built | Pages checked. Stripe-missing state checked. Test-mode payment not yet tested (needs Stripe keys). |
 | 9 | Stage-two price test `/confirm/[token]` (spec 10) | Built | Needs live database to test end to end. |
 | 10 | `/admin` (spec 9, 10) | Built | Login, table, sorting, CSV, summary, assign, email list written. Needs live database to test. |
 | 11 | Tracking: Meta pixel, Google tag (spec 11) | In progress | Loader and `track()` helper written; events wired as pages are built. Needs your IDs to run live. |
 | 12 | Accessibility pass (spec 3, 14) | Verified | axe scan: zero violations on `/`, `/join`, `/reserve`, `/confirmed`, `/privacy` at 1440 and 390. |
-| 13 | README / how-tos (spec 14) | Not started | |
+| 13 | README / how-tos (spec 14) | Built | `README.md`: run locally, Supabase, Vercel click-path, Stripe, admin, refund. |
 | 14 | `/privacy` and `/terms` placeholders (spec 4) | Built | Legal text needed from you. |
+| 15 | Supabase project + table | Verified | Project `family-guardian` (`pfvdnefygpffmqfytnyx`, us-east-1). See section 6. |
+| 16 | Vercel deployment | Blocked on Jacob | Connected Vercel tools cannot create projects or set env vars. Click-path in `README.md`. |
 
 ---
 
@@ -71,11 +73,18 @@ Build the early-access site described in `Family-Guardian-Build-Spec.md` from sc
 - Built `/join` (plan cards, compare drawer, form, sticky summary), `/reserve`, `/confirmed`, `/confirm/[token]`, `/admin`.
 - Without a database the sign-up API runs in demo mode in development only (nothing saved, goes on to /reserve). In production without a database it returns an error instead, so a lost sign-up is never silent.
 - Added 12 unit tests (`npm test`) and browser tests; found and fixed two accessibility problems (low-contrast "No", table not keyboard-scrollable).
+- Jacob asked Claude to also set up Supabase and Vercel. Created Supabase project `family-guardian` (after Jacob chose "create new project"), applied the `signups` table migration, and checked it (section 6).
+- Searched the connected Vercel tools: they cover connectors, domains and CI only, with no create-project, deploy or environment-variable tools. Wrote the exact click-path in `README.md` instead. No deployment exists yet.
+- Wrote `README.md` and put the (non-secret) Supabase URL in `.env.example`. The service role key is a secret and is not stored anywhere in the repo.
+- A test row (`dup-test@example.com`) that Claude inserted to check the table could not be deleted: three delete attempts through the Supabase tool timed out. See section 4.
 - Tracking: `?src=` and `utm_` values are saved whenever a page loads with them in the link, so the most recent tagged link wins.
 
 ---
 
 ## 4. Open items for Jacob (spec section 13)
+
+- [ ] **Vercel**: import the repo and add the environment variables (`README.md`, "Deploy to Vercel"). Needs the Supabase **service_role** key from the Supabase dashboard (Project Settings, API Keys).
+- [ ] **Clean up one test row** in Supabase. Run this in Supabase, SQL Editor: `delete from public.signups where email = 'dup-test@example.com';` (Claude's three attempts through the tool timed out; cause unknown.) It is fake data, but delete it before real sign-ups so your counts start at zero.
 
 - [ ] Company name, contact email, calendar link, domain. (Shown as `[COMPANY NAME]`, `[CONTACT EMAIL]`, `[YOUR SITE URL]`, `[CALENDAR LINK]` until supplied.)
 - [ ] Stripe account and keys, Supabase project, Resend account and sending domain.
@@ -102,6 +111,14 @@ Filled in as each becomes real. Placeholders for now:
 ### Landing page vs reference (2026-10-04)
 Method: the reference file was converted to plain HTML and rendered in Chromium next to the built site at 1440px and 390px. Every matching element's position, size, colors, font, padding, border, radius, letter spacing and line height were compared (95 elements at 1440).
 Result: no differences in anything above the plans section. The only differences are the planned spec-5 edits: hero note text, the price slot in the plan cards (cards are 16px shorter at desktop because "Pricing shared before launch" replaces the 40px price), the added Compare table, and the fifth "Pricing" fact row.
+
+### Supabase checks (2026-10-04)
+Run directly in the `family-guardian` database through the Supabase tool:
+- Table `public.signups` exists with row level security on (the only advisor note is "RLS enabled, no policy", which is intended: nobody but the server can touch it).
+- A minimal insert gets the right defaults (`deposit_status = none`, a generated `confirm_token`).
+- A second insert with the same email in different capitals is rejected by the unique index.
+- Acting as the public `anon` key: sees 0 rows although a row exists, and an insert is rejected by row level security.
+- Could not test from the sandbox over the internet: its network policy blocks `*.supabase.co`. So the app's own save-to-database call has not been run.
 
 ### Site-wide checks (2026-10-04)
 - `npm run typecheck`, `npm run lint`, `npm run build`: pass.

@@ -1,0 +1,446 @@
+/*
+  Family Guardian: one global stylesheet.
+
+  Every value here is copied from the reference design
+  ("Family Guardian Landing v3"), where it was written inline.
+  The reference's `style-hover` attributes are now normal :hover rules.
+  Sections at the bottom (join form, compare table, etc.) follow the spec
+  in the same visual style.
+
+  Colour cheat sheet (from the spec):
+    page #faf6ee | dark band + body text #23332b | gold #e9d9a6
+    green #2f5d46 | green hover #1f4331 | pale band #eef2e8
+    card border #e3dccb | pale-band card border #dde5d3 | divider #efe9da
+    eyebrow brown #7a6a45 | muted #4b5a51 #3d4b43 #5b6a60 | scam label #8a3d2a
+*/
+
+/* ---------- Base (from the reference <helmet> style) ---------- */
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: #faf6ee;
+  font-family: "Source Serif 4", Georgia, serif;
+  color: #23332b;
+}
+a { color: #2f5d46; }
+/* Only plain links get the green hover. Classed links set their own colours. */
+a:not([class]):hover { color: #1f4331; }
+
+/* The wrapper div from the reference */
+.page {
+  min-height: 100vh;
+  background: #faf6ee;
+  color: #23332b;
+  font-family: "Source Serif 4", Georgia, serif;
+  font-size: 18px;
+  line-height: 1.55;
+}
+
+/* ---------- Accessibility helpers (allowed by spec section 3) ---------- */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+/* Skip link: invisible until a keyboard user tabs to it */
+.skip-link {
+  position: absolute;
+  left: 12px; top: -80px;
+  z-index: 100;
+  background: #faf6ee;
+  color: #23332b;
+  padding: 12px 18px;
+  border-radius: 6px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.skip-link:focus { top: 12px; }
+
+/* Visible keyboard focus rings. Light ring on dark areas, green elsewhere. */
+:focus-visible { outline: 3px solid #2f5d46; outline-offset: 3px; }
+.on-dark :focus-visible { outline-color: #e9d9a6; }
+
+/* ---------- Dark hero + header ---------- */
+.on-dark { background: #23332b; color: #faf6ee; }
+
+.site-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 28px;
+  padding: 18px 40px;
+  border-bottom: 1px solid rgba(255, 255, 255, .14);
+}
+.logo {
+  font-size: 22px;
+  font-weight: 700;
+  color: #faf6ee;
+  text-decoration: none;
+  margin-right: auto;
+}
+.site-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 28px;
+  font-size: 17px;
+}
+.nav-link { color: #faf6ee; text-decoration: none; }
+
+.hero-inner {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 60px 40px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 40px;
+  align-items: end;
+}
+
+/* Eyebrows: 13px, uppercase, .1em, bold. Brown on light, gold on dark. */
+.eyebrow {
+  font-size: 13px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #7a6a45;
+  font-weight: 700;
+}
+.eyebrow-gold { color: #e9d9a6; }
+
+.hero-title {
+  font-size: clamp(36px, 5vw, 60px);
+  line-height: 1.08;
+  margin: 12px 0 18px;
+  text-wrap: balance;
+}
+.hero-lead { font-size: 21px; margin: 0 0 26px; max-width: 28em; }
+.hero-cta-row { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; }
+.hero-note { font-size: 15px; opacity: .8; }
+
+.stats { display: grid; gap: 22px; }
+.stat { border-left: 4px solid #e9d9a6; padding-left: 18px; }
+.stat-number { font-size: 60px; font-weight: 700; color: #e9d9a6; line-height: 1; }
+.stat-label { font-size: 17px; }
+.stat-source { font-size: 13px; opacity: .75; }
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-block;
+  border-radius: 6px;
+  font-weight: 600;
+  text-decoration: none;
+  font-family: inherit;
+  cursor: pointer;
+  text-align: center;
+  line-height: 1.55;
+}
+/* Light button for dark backgrounds */
+.btn-light, .btn-light:hover { color: #23332b; }
+.btn-light { background: #faf6ee; border: 0; }
+.btn-light:hover { background: #e9d9a6; }
+.btn-header { padding: 12px 22px; font-size: 17px; }
+.btn-hero { padding: 16px 28px; font-size: 19px; }
+
+/* Green primary button */
+.btn-green, .btn-green:hover { color: #fff; }
+.btn-green { background: #2f5d46; border: 0; }
+.btn-green:hover { background: #1f4331; }
+.btn-cta { padding: 18px 34px; font-size: 20px; }
+.btn-green[disabled], .btn-green[aria-disabled="true"] { background: #8a948d; cursor: not-allowed; }
+
+/* Plan card buttons: selected is filled, others are outlined */
+.btn-plan { border: 2px solid #2f5d46; padding: 13px; }
+.btn-plan-selected, .btn-plan-selected:hover { background: #2f5d46; color: #fff; }
+.btn-plan-other, .btn-plan-other:hover { background: #fff; color: #2f5d46; }
+
+/* ---------- Generic layout pieces ---------- */
+.wrap { max-width: 1120px; margin: 0 auto; }
+.section-pad { padding: 64px 40px; }
+.band-pale { background: #eef2e8; }
+.band-dark { background: #23332b; color: #faf6ee; }
+
+.h2 { font-size: 32px; margin: 6px 0 24px; }
+.grid-auto-300 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+
+.card {
+  background: #fff;
+  border: 1px solid #e3dccb;
+  border-radius: 12px;
+  padding: 26px;
+}
+
+/* ---------- Landing sections ---------- */
+.doors { max-width: 1120px; margin: 0 auto; padding: 72px 40px 56px; }
+.doors-title { font-size: 36px; margin: 6px 0 10px; line-height: 1.15; }
+.doors-lead { margin: 0 0 30px; color: #4b5a51; max-width: 34em; }
+.door-kicker { font-size: 13px; letter-spacing: .09em; text-transform: uppercase; color: #2f5d46; font-weight: 700; }
+.door-title { font-size: 26px; font-weight: 700; margin: 4px 0 12px; }
+.door-list { white-space: pre-line; font-size: 17px; line-height: 1.75; color: #3d4b43; }
+
+.flow-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; }
+.flow-title { font-size: 32px; margin: 6px 0 28px; }
+.flow-card { background: #fff; border: 1px solid #dde5d3; border-radius: 12px; padding: 22px; }
+.flow-num {
+  width: 42px; height: 42px; border-radius: 50%;
+  background: #2f5d46; color: #fff;
+  font-size: 22px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+.flow-name { font-size: 23px; font-weight: 700; margin: 12px 0 4px; }
+.flow-desc { font-size: 16px; color: #4b5a51; }
+
+.scams { max-width: 1120px; margin: 0 auto; padding: 64px 40px; }
+.scam-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
+.scam-card { background: #fff; border: 1px solid #e3dccb; border-radius: 10px; padding: 20px; }
+.scam-kind { font-size: 12px; letter-spacing: .08em; color: #8a3d2a; font-weight: 700; }
+.scam-quote { font-size: 20px; font-weight: 700; margin: 4px 0 6px; line-height: 1.25; }
+.scam-desc { font-size: 15px; color: #5b6a60; }
+
+.respect { padding: 72px 40px; }
+.respect-grid { max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 44px; }
+.respect-title { font-size: 34px; margin: 6px 0 14px; line-height: 1.15; }
+.respect-checks { display: grid; gap: 10px; font-size: 19px; }
+.who-list { display: grid; gap: 14px; margin-top: 10px; }
+.who-item { border-top: 1px solid rgba(255, 255, 255, .18); padding-top: 12px; }
+.who-item b { font-size: 20px; }
+.who-desc { font-size: 16px; opacity: .85; }
+
+.plans { max-width: 1120px; margin: 0 auto; padding: 72px 40px; }
+.plan-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+.plan-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.plan-card-selected { border: 2px solid #2f5d46; }
+.plan-card-other { border: 1px solid #e3dccb; }
+.plan-badge { font-size: 12px; color: #2f5d46; font-weight: 700; letter-spacing: .08em; min-height: 16px; }
+.plan-name { font-size: 26px; font-weight: 700; }
+.plan-price { font-size: 40px; font-weight: 700; line-height: 1; }
+.plan-price-unit { font-size: 16px; font-weight: 400; color: #5b6a60; }
+/* Stage one: replaces the price (spec section 5) */
+.plan-price-hidden { font-size: 20px; font-weight: 700; color: #2f5d46; line-height: 1.2; }
+.plan-blurb { font-size: 17px; color: #3d4b43; margin: 8px 0 18px; flex: 1; }
+
+.status { background: #eef2e8; padding: 64px 40px; }
+.status-grid { max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 36px; align-items: center; }
+.status-title { font-size: 32px; margin: 6px 0 12px; line-height: 1.15; }
+.status-lead { margin: 0; color: #4b5a51; }
+.facts { background: #fff; border: 1px solid #dde5d3; border-radius: 12px; padding: 24px; display: grid; gap: 14px; }
+.fact-row { display: flex; justify-content: space-between; gap: 16px; border-bottom: 1px solid #efe9da; padding-bottom: 12px; }
+.fact-key { color: #5b6a60; }
+.fact-val { text-align: right; }
+
+.final-cta { max-width: 1120px; margin: 0 auto; padding: 80px 40px; text-align: center; }
+.final-title { font-size: clamp(32px, 4vw, 44px); margin: 0 0 14px; line-height: 1.15; }
+.final-lead { margin: 0 0 26px; font-size: 20px; }
+
+.site-footer {
+  border-top: 1px solid #e3dccb;
+  padding: 24px 40px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 28px;
+  justify-content: space-between;
+  font-size: 15px;
+  color: #5b6a60;
+}
+.footer-links { display: flex; gap: 20px; flex-wrap: wrap; }
+
+/* ---------- Compare plans table (spec section 7) ---------- */
+.compare-head { margin-top: 56px; }
+.compare-card {
+  background: #fff;
+  border: 1px solid #e3dccb;
+  border-radius: 12px;
+  overflow-x: auto;
+}
+.compare-table { border-collapse: separate; border-spacing: 0; width: 100%; min-width: 640px; }
+.compare-table th, .compare-table td { text-align: center; padding: 8px 16px; }
+.compare-table thead th {
+  background: #eef2e8;
+  font-size: 20px;
+  font-weight: 700;
+  padding: 16px;
+  border-top: 2px solid transparent;
+}
+.compare-table thead th.compare-plus { border-top-color: #2f5d46; }
+.compare-table tbody th, .compare-table tbody td {
+  height: 56px;
+  border-bottom: 1px solid #efe9da;
+  font-size: 17px;
+}
+.compare-table tbody tr:last-child th, .compare-table tbody tr:last-child td { border-bottom: 0; }
+/* First column: feature name, sticky when the table scrolls sideways */
+.compare-table th:first-child {
+  text-align: left;
+  font-weight: 400;
+  position: sticky;
+  left: 0;
+  background: #fff;
+  min-width: 240px;
+  z-index: 1;
+}
+.compare-table thead th:first-child { background: #eef2e8; z-index: 2; }
+.compare-table td.compare-plus { background: #f5f8f1; }
+.compare-no { color: #8a948d; }
+.compare-check { color: #2f5d46; vertical-align: middle; }
+.compare-text { font-weight: 600; }
+.compare-note { text-align: center; font-size: 15px; color: #5b6a60; margin: 16px 0 0; }
+
+/* ---------- Join page (spec section 6) ---------- */
+.page-hero-inner { max-width: 1120px; margin: 0 auto; padding: 56px 40px; }
+.page-hero-title { font-size: clamp(34px, 4.4vw, 52px); line-height: 1.1; margin: 12px 0 14px; text-wrap: balance; }
+.page-hero-lead { font-size: 21px; margin: 0; max-width: 32em; }
+
+.join-section { max-width: 1120px; margin: 0 auto; padding: 56px 40px 0; }
+.join-section-last { padding-bottom: 80px; }
+.join-h2 { font-size: 32px; margin: 6px 0 24px; line-height: 1.15; }
+
+/* Selectable plan cards. The real radio input sits inside the label. */
+.pick-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+.plan-pick {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: #fff;
+  border: 1px solid #e3dccb;
+  border-radius: 12px;
+  padding: 26px;
+  cursor: pointer;
+}
+/* Selected: 2px green edge (drawn inside so nothing jumps) + pale background */
+.plan-pick-selected { background: #eef2e8; box-shadow: inset 0 0 0 1px #2f5d46; border-color: #2f5d46; }
+.plan-pick:has(input:focus-visible) { outline: 3px solid #2f5d46; outline-offset: 3px; }
+.plan-pick input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.pick-check {
+  position: absolute; top: 20px; right: 20px;
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 2px solid #b9b29b;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff;
+}
+.plan-pick-selected .pick-check { background: #2f5d46; border-color: #2f5d46; }
+.pick-desc { font-size: 17px; color: #3d4b43; }
+.pick-features { list-style: none; padding: 0; margin: 8px 0 0; display: grid; gap: 10px; font-size: 16px; color: #3d4b43; flex: 1; align-content: start; }
+.pick-features li { display: flex; gap: 10px; align-items: flex-start; }
+.pick-features svg { flex: none; margin-top: 4px; color: #2f5d46; }
+.pick-covers { font-size: 15px; font-weight: 600; color: #2f5d46; border-top: 1px solid #efe9da; padding-top: 12px; margin-top: 8px; }
+.pick-help { font-size: 15px; color: #5b6a60; margin: 18px 0 0; }
+
+/* <details> compare drawer */
+.compare-details { margin-top: 28px; }
+.compare-details > summary {
+  cursor: pointer;
+  font-size: 19px;
+  font-weight: 700;
+  color: #2f5d46;
+  padding: 12px 0;
+}
+.compare-details[open] > summary { margin-bottom: 12px; }
+
+/* Step 2 layout: form left, sticky summary right on wide screens */
+.join-layout { display: grid; grid-template-columns: 1fr; gap: 28px; align-items: start; }
+.join-aside { display: none; }
+@media (min-width: 900px) {
+  .join-layout { grid-template-columns: minmax(0, 1fr) 360px; gap: 40px; }
+  .join-aside { display: block; position: sticky; top: 24px; }
+  .summary-bar { display: none; }
+}
+
+.form-card { max-width: 560px; }
+.field { margin-bottom: 22px; }
+.field label, .field .label { display: block; font-weight: 600; margin-bottom: 6px; }
+.optional { font-weight: 400; color: #5b6a60; }
+.input, .select, .textarea {
+  width: 100%;
+  font: inherit;
+  font-size: 18px;
+  padding: 12px 14px;
+  background: #fff;
+  color: #23332b;
+  border: 1px solid #8c8672;
+  border-radius: 6px;
+}
+.textarea { resize: vertical; }
+.money { display: flex; align-items: stretch; }
+.money-affix { display: flex; align-items: center; padding: 0 14px; background: #eef2e8; border: 1px solid #8c8672; color: #4b5a51; font-weight: 600; }
+.money-affix-left { border-right: 0; border-radius: 6px 0 0 6px; }
+.money-affix-right { border-left: 0; border-radius: 0 6px 6px 0; }
+.money .input { border-radius: 0; flex: 1; min-width: 0; }
+.input:disabled { background: #f1ede1; color: #8a948d; }
+.checkbox-row { display: flex; gap: 10px; align-items: flex-start; margin-top: 10px; font-weight: 400; }
+.checkbox-row input { width: 22px; height: 22px; margin: 2px 0 0; flex: none; accent-color: #2f5d46; }
+.field label.checkbox-row { font-weight: 400; margin-bottom: 0; display: flex; }
+.helper { font-size: 15px; color: #5b6a60; margin: 8px 0 0; }
+
+/* Error style from spec: #8a3d2a message with icon, 2px border, #fbeeea background */
+.has-error .input, .has-error .select, .has-error .textarea, .has-error .money-affix { border-color: #8a3d2a; background: #fbeeea; }
+.has-error .input, .has-error .select, .has-error .textarea { border-width: 2px; }
+.error-msg { display: flex; gap: 8px; align-items: flex-start; color: #8a3d2a; font-size: 15px; margin: 8px 0 0; font-weight: 600; }
+.error-msg svg { flex: none; margin-top: 3px; }
+
+.summary-bar {
+  background: #23332b; color: #faf6ee;
+  border-radius: 8px; padding: 12px 16px;
+  margin: 8px 0 16px;
+  font-size: 16px;
+}
+.form-submit { width: 100%; padding: 16px 28px; font-size: 19px; }
+@media (min-width: 600px) { .form-submit { width: auto; } }
+.fine-print { font-size: 15px; color: #5b6a60; margin: 14px 0 0; }
+.form-error-banner { margin-top: 16px; }
+
+.summary-card { background: #23332b; color: #faf6ee; border-radius: 12px; padding: 28px; }
+.summary-plan { font-size: 28px; font-weight: 700; margin: 6px 0 8px; line-height: 1.15; }
+.summary-desc { margin: 0 0 14px; }
+.summary-fine { font-size: 15px; margin: 0; opacity: .85; }
+.promise-card { margin-top: 16px; padding: 22px; }
+.promise-card p { margin: 0 0 8px; font-size: 16px; color: #3d4b43; }
+
+/* ---------- Reserve / confirmed / confirm pages ---------- */
+.narrow { max-width: 720px; margin: 0 auto; padding: 56px 40px 80px; }
+.deposit-title { font-size: 28px; margin: 0 0 16px; }
+.check-lines { list-style: none; padding: 0; margin: 0 0 24px; display: grid; gap: 12px; }
+.check-lines li { display: flex; gap: 10px; align-items: flex-start; }
+.check-lines svg { flex: none; margin-top: 5px; color: #2f5d46; }
+.plain-link { display: inline-block; margin-top: 18px; }
+.steps { display: grid; gap: 16px; margin: 0 0 28px; }
+.step-card { display: flex; gap: 16px; align-items: flex-start; }
+.step-title { font-size: 22px; font-weight: 700; margin: 0 0 2px; }
+.step-body { margin: 0; color: #3d4b43; font-size: 17px; }
+.share-card { background: #23332b; color: #faf6ee; border-radius: 12px; padding: 28px; margin-top: 32px; }
+.share-card p { margin: 0 0 14px; font-size: 20px; }
+.share-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.share-row .input { flex: 1; min-width: 220px; }
+.btn-gold, .btn-gold:hover { color: #23332b; }
+.btn-gold { background: #e9d9a6; border: 0; padding: 12px 22px; font-size: 17px; }
+.btn-gold:hover { background: #faf6ee; }
+.big-line { font-size: 20px; margin: 0 0 8px; }
+
+/* ---------- Admin ---------- */
+.admin-wrap { max-width: 1280px; margin: 0 auto; padding: 32px 24px 80px; }
+.admin-table-card { background: #fff; border: 1px solid #e3dccb; border-radius: 12px; overflow-x: auto; }
+.admin-table { border-collapse: collapse; width: 100%; font-size: 15px; min-width: 900px; }
+.admin-table th, .admin-table td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #efe9da; vertical-align: top; }
+.admin-table th { background: #eef2e8; white-space: nowrap; }
+.admin-table th a { color: #23332b; text-decoration: none; }
+.admin-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin: 20px 0 28px; }
+.admin-actions { display: flex; gap: 12px; flex-wrap: wrap; margin: 20px 0; }
+.btn-outline, .btn-outline:hover { color: #2f5d46; }
+.btn-outline { background: #fff; border: 2px solid #2f5d46; padding: 10px 18px; font-size: 16px; }
+
+/* Narrow screens: slimmer first column so the plan columns peek into view */
+@media (max-width: 600px) {
+  .compare-table { min-width: 520px; }
+  .compare-table th:first-child { min-width: 150px; width: 150px; font-size: 15px; padding: 8px 12px; }
+  .compare-table th, .compare-table td { padding: 8px 10px; }
+}

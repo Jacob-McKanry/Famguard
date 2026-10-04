@@ -6,7 +6,8 @@ import { CheckIcon } from "./Icons";
 export default function CompareTable() {
   return (
     <>
-      <div className="compare-card">
+      {/* tabIndex lets keyboard users scroll the table sideways on small screens */}
+      <div className="compare-card" role="region" aria-label="Plan comparison table" tabIndex={0}>
         <table className="compare-table">
           <caption className="sr-only">Every feature, side by side</caption>
           <thead>

@@ -21,6 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Source Serif 4 (weights 400, 600, 700), same as the reference design */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        {/* eslint-disable-next-line @next/next/no-page-custom-font -- same Google Fonts link as the reference design */}
         <link
           href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600;700&display=swap"
           rel="stylesheet"

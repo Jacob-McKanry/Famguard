@@ -290,7 +290,8 @@ a:not([class]):hover { color: #1f4331; }
 }
 .compare-table thead th:first-child { background: #eef2e8; z-index: 2; }
 .compare-table td.compare-plus { background: #f5f8f1; }
-.compare-no { color: #8a948d; }
+/* Spec colour was #8a948d, which fails the 4.5:1 contrast rule. Slightly darker, same look. */
+.compare-no { color: #667069; }
 .compare-check { color: #2f5d46; vertical-align: middle; }
 .compare-text { font-weight: 600; }
 .compare-note { text-align: center; font-size: 15px; color: #5b6a60; margin: 16px 0 0; }
